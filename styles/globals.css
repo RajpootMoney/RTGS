@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom color palette */
+:root {
+  --color-primary: hsl(210, 40%, 55%);
+  --color-secondary: hsl(210, 30%, 95%);
+  --color-accent: hsl(35, 80%, 60%);
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: hsl(210, 30%, 35%);
+    --color-secondary: hsl(210, 20%, 20%);
+    --color-accent: hsl(35, 70%, 55%);
+  }
+}
+
+/* Smooth scroll and micro‑animations */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Example utility classes */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.text-primary {
+  color: var(--color-primary);
+}
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+}

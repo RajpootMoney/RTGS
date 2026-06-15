@@ -1,0 +1,77 @@
+[
+  {
+    "id": "pp-corrugated-boxes",
+    "name": "PP Corrugated Boxes",
+    "slug": "pp-corrugated-boxes",
+    "description": "High-quality, durable, and reusable PP Corrugated Boxes for safe industrial packaging.",
+    "keywords": [
+      "PP Corrugated Boxes",
+      "Reusable PP Boxes",
+      "Waterproof PP Boxes",
+      "Returnable PP Boxes",
+      "Heavy Duty PP Boxes"
+    ],
+    "features": ["Water Resistant", "Heat Resistant", "Reusable", "Recyclable", "Durable"]
+  },
+  {
+    "id": "pp-trays",
+    "name": "PP Trays",
+    "slug": "pp-trays",
+    "description": "Industrial PP Trays designed for efficient part handling and logistics.",
+    "keywords": [
+      "PP Tray Manufacturer",
+      "Industrial PP Trays",
+      "Reusable Trays"
+    ],
+    "features": ["Lightweight", "Customizable", "Stackable", "Non Breakable"]
+  },
+  {
+    "id": "esd-packaging",
+    "name": "ESD Packaging",
+    "slug": "esd-packaging",
+    "description": "Anti-static ESD packaging solutions for sensitive electronic components.",
+    "keywords": [
+      "ESD Packaging",
+      "Anti Static Packaging",
+      "Conductive Packaging",
+      "ESD Safe Packaging"
+    ],
+    "features": ["Anti-Static", "Conductive", "Safe for Electronics"]
+  },
+  {
+    "id": "foam-fitments",
+    "name": "Foam Fitments",
+    "slug": "foam-fitments",
+    "description": "Custom EPE Foam Fitments for protective cushioning and impact resistance.",
+    "keywords": [
+      "Foam Fitments",
+      "EPE Fitments",
+      "Protective Packaging"
+    ],
+    "features": ["Protective Cushioning", "Impact Resistant", "Custom Fit"]
+  },
+  {
+    "id": "pp-corrugated-sheets",
+    "name": "PP Corrugated Sheets",
+    "slug": "pp-corrugated-sheets",
+    "description": "Versatile PP Corrugated Sheets and Flute Boards for multiple applications.",
+    "keywords": [
+      "PP Corrugated Sheets",
+      "Polypropylene Sheets",
+      "PP Flute Board"
+    ],
+    "features": ["Water Repellent", "Long Life", "Recyclable"]
+  },
+  {
+    "id": "custom-packaging",
+    "name": "Custom Packaging Solutions",
+    "slug": "custom-packaging-solutions",
+    "description": "Tailor-made industrial and returnable packaging solutions based on your requirements.",
+    "keywords": [
+      "Industrial Packaging Solutions",
+      "Custom Packaging",
+      "Returnable Packaging"
+    ],
+    "features": ["100% Custom Manufacturing", "Returnable", "Sustainable"]
+  }
+]

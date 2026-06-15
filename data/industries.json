@@ -1,0 +1,44 @@
+[
+  {
+    "id": "automobile",
+    "name": "Automobile Industry",
+    "slug": "automobile",
+    "description": "Heavy-duty and custom Automotive PP Packaging solutions.",
+    "keywords": ["Automotive PP Packaging", "Automobile Packaging"]
+  },
+  {
+    "id": "electronics",
+    "name": "Electronics Industry",
+    "slug": "electronics",
+    "description": "ESD Safe Packaging and conductive solutions for electronics.",
+    "keywords": ["Electronics Packaging", "ESD Packaging"]
+  },
+  {
+    "id": "pharmaceutical",
+    "name": "Pharmaceutical Industry",
+    "slug": "pharmaceutical",
+    "description": "Clean, durable, and safe Pharmaceutical Packaging.",
+    "keywords": ["Pharmaceutical Packaging"]
+  },
+  {
+    "id": "fmcg",
+    "name": "FMCG Industry",
+    "slug": "fmcg",
+    "description": "Fast-moving consumer goods packaging for retail logistics.",
+    "keywords": ["FMCG Packaging"]
+  },
+  {
+    "id": "logistics",
+    "name": "Logistics Industry",
+    "slug": "logistics",
+    "description": "Stackable and returnable packaging for efficient logistics.",
+    "keywords": ["Logistics Packaging"]
+  },
+  {
+    "id": "industrial-goods",
+    "name": "Industrial Goods",
+    "slug": "industrial-goods",
+    "description": "Heavy duty Industrial Packaging Solutions for manufacturing.",
+    "keywords": ["Industrial Packaging Solutions"]
+  }
+]
