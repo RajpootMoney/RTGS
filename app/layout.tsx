@@ -15,6 +15,9 @@ export const metadata: Metadata = {
   title: "RTGS PACK LLP | PP Corrugated Box Manufacturer & Industrial Packaging Solutions",
   description: "Manufacturers of sustainable, reusable, recyclable and returnable industrial packaging solutions including PP Corrugated Boxes, PP Trays, ESD Packaging.",
   keywords: "PP Corrugated Box Manufacturer, PP Packaging Manufacturer, Industrial Packaging Solutions, Sustainable Packaging",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

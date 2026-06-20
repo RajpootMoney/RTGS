@@ -6,7 +6,7 @@ export default function FloatingButtons() {
         href="https://wa.me/919876543210"
         target="_blank"
         rel="noopener noreferrer"
-        className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform"
+        className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg hover:scale-115 active:scale-95 transition-all duration-300 animate-float-bounce hover:shadow-green-500/40 hover:shadow-xl"
         aria-label="Chat on WhatsApp"
       >
         <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
@@ -17,7 +17,7 @@ export default function FloatingButtons() {
       {/* Phone Button */}
       <a
         href="tel:+919876543210"
-        className="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform"
+        className="w-14 h-14 bg-primary rounded-full flex items-center justify-center text-white shadow-lg hover:scale-115 active:scale-95 transition-all duration-300 animate-float-bounce delay-200 hover:shadow-primary/40 hover:shadow-xl"
         aria-label="Call Us"
       >
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">

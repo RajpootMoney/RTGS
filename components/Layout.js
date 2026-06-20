@@ -1,6 +1,5 @@
 import React from 'react';
 import Head from 'next/head';
-import SEO from './SEO';
 
 export default function Layout({ children, title, description, keywords }) {
   return (

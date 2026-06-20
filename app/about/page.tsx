@@ -11,7 +11,7 @@ export default function About() {
       {/* Page Header */}
       <div className="bg-primary py-16 text-center text-white">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">About Us</h1>
-        <p className="text-xl max-w-2xl mx-auto">India's Most Trusted Sustainable Packaging Manufacturer</p>
+        <p className="text-xl max-w-2xl mx-auto">India&apos;s Most Trusted Sustainable Packaging Manufacturer</p>
       </div>
 
       <div className="container mx-auto px-4 py-16">
@@ -36,7 +36,7 @@ export default function About() {
           <div className="bg-gray-50 p-8 rounded-lg border-l-4 border-primary shadow-sm">
             <h3 className="text-2xl font-bold text-primary mb-4">Our Vision</h3>
             <p className="text-gray-700 text-lg">
-              To become India's most trusted and innovative sustainable packaging manufacturer, driving the industry towards zero-wastage and eco-friendly solutions.
+              To become India&apos;s most trusted and innovative sustainable packaging manufacturer, driving the industry towards zero-wastage and eco-friendly solutions.
             </p>
           </div>
           <div className="bg-gray-50 p-8 rounded-lg border-l-4 border-secondary shadow-sm">
