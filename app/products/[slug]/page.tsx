@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: ProductProps): Promise<Metada
     return { title: "Product Not Found" };
   }
   return {
-    title: `${product.name} Manufacturer | Nilanchal Packaging`,
+    title: `${product.name} Manufacturer | RTGS PACK LLP`,
     description: product.description,
     keywords: product.keywords.join(", "),
   };
@@ -60,7 +60,7 @@ export default async function ProductPage({ params }: ProductProps) {
                 Our {product.name} are designed to provide the highest level of protection and efficiency for your industrial packaging needs. Manufactured using premium grade materials, they offer exceptional durability and sustainability.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                As a leading manufacturer, Nilanchal Packaging ensures that every batch meets stringent quality standards, delivering a returnable and reusable solution that reduces your overall packaging costs.
+                As a leading manufacturer, RTGS PACK LLP ensures that every batch meets stringent quality standards, delivering a returnable and reusable solution that reduces your overall packaging costs.
               </p>
             </section>
 

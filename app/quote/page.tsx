@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import LeadForm from "@/components/LeadForm";
 
 export const metadata: Metadata = {
-  title: "Get a Free Quote | Nilanchal Packaging",
+  title: "Get a Free Quote | RTGS PACK LLP",
   description: "Request a free quotation for bulk industrial packaging solutions, PP Corrugated Boxes, and Custom Trays.",
 };
 

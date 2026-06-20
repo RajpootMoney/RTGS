@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us | Nilanchal Packaging",
-  description: "Learn about Nilanchal Packaging, India's trusted manufacturer of sustainable and reusable industrial packaging solutions.",
+  title: "About Us | RTGS PACK LLP",
+  description: "Learn about RTGS PACK LLP, India's trusted manufacturer of sustainable and reusable industrial packaging solutions.",
 };
 
 export default function About() {
@@ -19,7 +19,7 @@ export default function About() {
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-6 border-b-4 border-accent inline-block pb-2">Company Overview</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              Nilanchal Packaging is a premier manufacturer of industrial packaging solutions specializing in PP Corrugated Boxes, PP Trays, ESD Packaging, and Foam Fitments.
+              RTGS PACK LLP is a premier manufacturer of industrial packaging solutions specializing in PP Corrugated Boxes, PP Trays, ESD Packaging, and Foam Fitments.
               With over 10 years of experience, we have established ourselves as a leader in creating sustainable, reusable, and returnable packaging systems.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
@@ -48,7 +48,7 @@ export default function About() {
         </div>
 
         <div className="mb-20 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12">Why Nilanchal Packaging?</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12">Why RTGS PACK LLP?</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
               { title: "Quality Manufacturing", icon: "⭐" },

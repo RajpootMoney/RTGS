@@ -3,7 +3,7 @@ import Link from "next/link";
 import products from "@/data/products.json";
 
 export const metadata: Metadata = {
-  title: "Industrial Packaging Products | Nilanchal Packaging",
+  title: "Industrial Packaging Products | RTGS PACK LLP",
   description: "Browse our extensive range of industrial packaging solutions including PP Corrugated Boxes, PP Trays, ESD Packaging, and Foam Fitments.",
 };
 

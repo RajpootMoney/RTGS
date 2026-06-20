@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: LocationProps): Promise<Metad
   const cityName = locations[cityIndex];
   
   return {
-    title: `PP Box Manufacturer in ${cityName} | Nilanchal Packaging`,
+    title: `PP Box Manufacturer in ${cityName} | RTGS PACK LLP`,
     description: `Leading PP Box Manufacturer in ${cityName}. We supply sustainable, heavy-duty industrial packaging solutions including PP Corrugated Boxes and Trays.`,
     keywords: `PP Box Manufacturer in ${cityName}, Industrial Packaging ${cityName}, PP Corrugated Boxes ${cityName}`,
   };
@@ -57,7 +57,7 @@ export default async function LocationPage({ params }: LocationProps) {
             <section>
               <h2 className="text-3xl font-bold text-gray-900 mb-6 border-b-2 border-accent pb-2">Your Trusted Packaging Partner in {cityName}</h2>
               <p className="mb-4">
-                As industrial manufacturing and logistics continue to expand in {cityName}, the demand for robust, reliable, and sustainable packaging solutions has never been higher. Nilanchal Packaging stands as a leading <strong>PP Box Manufacturer in {cityName}</strong>, dedicated to serving the diverse needs of local industries.
+                As industrial manufacturing and logistics continue to expand in {cityName}, the demand for robust, reliable, and sustainable packaging solutions has never been higher. RTGS PACK LLP stands as a leading <strong>PP Box Manufacturer in {cityName}</strong>, dedicated to serving the diverse needs of local industries.
               </p>
               <p className="mb-4">
                 We specialize in customized Polypropylene (PP) Corrugated Boxes, PP Trays, ESD Packaging, and Foam Fitments. Our products are engineered to provide maximum protection for your goods while ensuring long-term reusability, ultimately lowering your packaging costs.

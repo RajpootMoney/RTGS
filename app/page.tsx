@@ -56,7 +56,7 @@ export default function Home() {
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">India's Trusted PP Packaging Manufacturer</h2>
           <p className="text-lg text-gray-700 leading-relaxed">
-            Nilanchal Packaging is a leading manufacturer of PP Corrugated Boxes, PP Trays, ESD Packaging, Foam Fitments and Industrial Packaging Solutions. We help industries reduce packaging costs through reusable, recyclable and sustainable packaging systems.
+            RTGS PACK LLP is a leading manufacturer of PP Corrugated Boxes, PP Trays, ESD Packaging, Foam Fitments and Industrial Packaging Solutions. We help industries reduce packaging costs through reusable, recyclable and sustainable packaging systems.
           </p>
         </div>
       </section>

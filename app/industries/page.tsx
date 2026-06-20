@@ -3,7 +3,7 @@ import Link from "next/link";
 import industries from "@/data/industries.json";
 
 export const metadata: Metadata = {
-  title: "Industries We Serve | Nilanchal Packaging",
+  title: "Industries We Serve | RTGS PACK LLP",
   description: "We provide specialized industrial packaging solutions for the Automobile, Electronics, Pharmaceutical, FMCG, and Logistics industries.",
 };
 

@@ -21,7 +21,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold text-primary">
-          Nilanchal Packaging
+          RTGS PACK LLP
         </Link>
 
         {/* Desktop Navigation */}

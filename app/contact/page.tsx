@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import LeadForm from "@/components/LeadForm";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Nilanchal Packaging",
-  description: "Get in touch with Nilanchal Packaging for sustainable industrial packaging solutions.",
+  title: "Contact Us | RTGS PACK LLP",
+  description: "Get in touch with RTGS PACK LLP for sustainable industrial packaging solutions.",
 };
 
 export default function ContactPage() {
@@ -52,8 +52,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900 text-lg">Email Address</h4>
-                  <p className="text-gray-600"><a href="mailto:sales@nilanchalpackaging.com" className="hover:text-accent">sales@nilanchalpackaging.com</a></p>
-                  <p className="text-gray-600"><a href="mailto:info@nilanchalpackaging.com" className="hover:text-accent">info@nilanchalpackaging.com</a></p>
+                  <p className="text-gray-600"><a href="mailto:sales@rtgspack.com" className="hover:text-accent">sales@rtgspack.com</a></p>
+                  <p className="text-gray-600"><a href="mailto:info@rtgspack.com" className="hover:text-accent">info@rtgspack.com</a></p>
                 </div>
               </div>
 

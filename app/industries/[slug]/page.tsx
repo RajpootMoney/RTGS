@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: IndustryProps): Promise<Metad
     return { title: "Industry Not Found" };
   }
   return {
-    title: `${industry.name} Packaging Solutions | Nilanchal Packaging`,
+    title: `${industry.name} Packaging Solutions | RTGS PACK LLP`,
     description: industry.description,
     keywords: industry.keywords.join(", "),
   };
@@ -51,7 +51,7 @@ export default async function IndustryPage({ params }: IndustryProps) {
             <section>
               <h2 className="text-3xl font-bold text-gray-900 mb-6 border-b-2 border-accent pb-2">Customized Packaging for {industry.name}</h2>
               <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                The {industry.name} requires packaging solutions that are robust, precise, and capable of withstanding rigorous supply chain conditions. At Nilanchal Packaging, we specialize in delivering custom returnable and reusable packaging systems specifically tailored for this sector.
+                The {industry.name} requires packaging solutions that are robust, precise, and capable of withstanding rigorous supply chain conditions. At RTGS PACK LLP, we specialize in delivering custom returnable and reusable packaging systems specifically tailored for this sector.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
                 By utilizing high-grade Polypropylene (PP) Corrugated sheets and custom ESD/Foam fitments, we ensure zero transit damage while maximizing payload efficiency.

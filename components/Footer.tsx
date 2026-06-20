@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="bg-gray-900 text-gray-300 py-12">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <h3 className="text-xl font-bold text-white mb-4">Nilanchal Packaging</h3>
+          <h3 className="text-xl font-bold text-white mb-4">RTGS PACK LLP</h3>
           <p className="mb-4">Sustainable. Reusable. Recyclable Packaging Solutions.</p>
           <div className="flex space-x-4">
             {/* Social Icons Placeholder */}
@@ -42,14 +42,14 @@ export default function Footer() {
           <address className="not-italic space-y-2">
             <p>123 Industrial Estate,</p>
             <p>Manufacturing Hub, India</p>
-            <p>Email: <a href="mailto:sales@nilanchalpackaging.com" className="hover:text-accent transition-fast">sales@nilanchalpackaging.com</a></p>
+            <p>Email: <a href="mailto:sales@rtgspack.com" className="hover:text-accent transition-fast">sales@rtgspack.com</a></p>
             <p>Phone: <a href="tel:+919876543210" className="hover:text-accent transition-fast">+91 98765 43210</a></p>
           </address>
         </div>
       </div>
       
       <div className="container mx-auto px-4 mt-8 pt-8 border-t border-gray-700 text-center text-sm">
-        <p>&copy; {new Date().getFullYear()} Nilanchal Packaging. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} RTGS PACK LLP. All rights reserved.</p>
       </div>
     </footer>
   );
