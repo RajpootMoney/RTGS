@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import LeadForm from "@/components/LeadForm";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -120,10 +121,16 @@ export default function ShippingLogistics() {
     <div className="bg-white min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-gray-950 text-white overflow-hidden py-24 lg:py-32">
-        <div 
-          className="absolute inset-0 opacity-30 bg-[url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center animate-zoom-bg z-0"
-          style={{ transformOrigin: "center" }}
-        ></div>
+        <div className="absolute inset-0 opacity-30 z-0 select-none pointer-events-none overflow-hidden">
+          <Image
+            src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=60&w=1200&auto=format&fit=crop&fm=webp"
+            alt="Shipping Logistics Hub"
+            fill
+            priority
+            unoptimized
+            className="object-cover object-center animate-zoom-bg"
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-900/90 to-transparent z-0"></div>
         
         <div className="container mx-auto px-4 relative z-10">

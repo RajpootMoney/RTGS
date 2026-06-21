@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
@@ -22,7 +23,15 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 inline-block">
-          <img src="/logo.png" alt="RTGS PACK LLP" className="h-10 sm:h-12 lg:h-14 w-auto object-contain" />
+          <Image
+            src="/logo.webp"
+            alt="RTGS PACK LLP"
+            width={214}
+            height={56}
+            priority
+            unoptimized
+            className="h-10 sm:h-12 lg:h-14 w-auto object-contain"
+          />
         </Link>
 
         {/* Desktop Navigation */}

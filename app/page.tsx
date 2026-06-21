@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import LeadForm from "@/components/LeadForm";
 import products from "@/data/products.json";
 import industries from "@/data/industries.json";
@@ -10,7 +11,16 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className="relative bg-gray-950 text-white overflow-hidden py-28 lg:py-36">
-        <div className="absolute inset-0 opacity-40 bg-[url('https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center animate-zoom-bg z-0"></div>
+        <div className="absolute inset-0 opacity-40 z-0 select-none pointer-events-none overflow-hidden">
+          <Image
+            src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=60&w=1200&auto=format&fit=crop&fm=webp"
+            alt="RTGS PACK LLP Manufacturing Facility"
+            fill
+            priority
+            unoptimized
+            className="object-cover object-center animate-zoom-bg"
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-900/85 to-transparent z-0"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl animate-fade-in-up">

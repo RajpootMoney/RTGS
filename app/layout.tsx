@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: "Manufacturers of sustainable, reusable, recyclable and returnable industrial packaging solutions including PP Corrugated Boxes, PP Trays, ESD Packaging.",
   keywords: "PP Corrugated Box Manufacturer, PP Packaging Manufacturer, Industrial Packaging Solutions, Sustainable Packaging",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.ico",
   },
 };
 
