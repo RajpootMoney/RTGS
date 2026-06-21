@@ -20,6 +20,7 @@ export default function Footer() {
           <ul className="space-y-2">
             <li><Link href="/" className="hover:text-accent transition-fast">Home</Link></li>
             <li><Link href="/about" className="hover:text-accent transition-fast">About Us</Link></li>
+            <li><Link href="/shipping" className="hover:text-accent transition-fast">Shipping & Logistics</Link></li>
             <li><Link href="/blog" className="hover:text-accent transition-fast">Blog</Link></li>
             <li><Link href="/contact" className="hover:text-accent transition-fast">Contact Us</Link></li>
             <li><Link href="/quote" className="hover:text-accent transition-fast">Get Quote</Link></li>
