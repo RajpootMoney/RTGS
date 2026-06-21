@@ -37,12 +37,23 @@ export default function ProductsIndex() {
                   </ul>
                 </div>
                 
-                <Link 
-                  href={`/products/${product.slug}`}
-                  className="mt-auto block w-full text-center bg-primary text-white py-2 rounded-md font-semibold hover:bg-secondary transition-fast"
-                >
-                  View Details
-                </Link>
+                <div className="mt-auto grid grid-cols-2 gap-3 pt-4 border-t border-gray-100">
+                  <Link 
+                    href={`/products/${product.slug}`}
+                    className="text-center bg-primary hover:bg-secondary text-white py-2.5 px-2 rounded-lg font-semibold transition-fast text-sm flex items-center justify-center"
+                  >
+                    View Details
+                  </Link>
+                  <a 
+                    href="tel:+919876543210"
+                    className="text-center border border-secondary text-secondary hover:bg-secondary hover:text-white py-2.5 px-2 rounded-lg font-semibold transition-fast text-sm flex items-center justify-center gap-1.5"
+                  >
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20 15.5c-1.2 0-2.4-.2-3.6-.6-.3-.1-.7 0-1 .3l-2.2 2.2c-2.8-1.4-5.1-3.8-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1-.3-1.1-.5-2.3-.5-3.6 0-.8-.7-1.5-1.5-1.5H4C3.2 2.5 2.5 3.2 2.5 4c0 10.2 8.3 18.5 18.5 18.5.8 0 1.5-.7 1.5-1.5v-4c0-.8-.7-1.5-1.5-1.5z"/>
+                    </svg>
+                    Call Now
+                  </a>
+                </div>
               </div>
             </div>
           ))}
