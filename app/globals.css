@@ -205,6 +205,67 @@ body {
   transform-origin: bottom left;
 }
 
+/* Animations for QuotePopup modal */
+@keyframes overlayFadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+  }
+}
+
+@keyframes overlayFadeOut {
+  from {
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalSlideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+}
+
+.animate-overlay {
+  animation: overlayFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-overlay-exit {
+  animation: overlayFadeOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-pop {
+  animation: modalSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-pop-exit {
+  animation: modalSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* WYSIWYG Editor specific overrides to bypass Tailwind resets */
 .wysiwyg-editor {
   color: #1f2937 !important;
@@ -261,4 +322,5 @@ body {
   margin-top: 1rem !important;
   margin-bottom: 1rem !important;
 }
+
 

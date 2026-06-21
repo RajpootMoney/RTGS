@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
+import QuotePopup from "@/components/QuotePopup";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -37,6 +38,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <FloatingButtons />
+        <QuotePopup />
       </body>
     </html>
   );
