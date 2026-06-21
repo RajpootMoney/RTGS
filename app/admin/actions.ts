@@ -73,12 +73,35 @@ async function writeJsonFile<T>(filename: string, data: T): Promise<void> {
   }
 }
 
-// CRUD Operations: Products
-export async function getProducts() {
-  return await readJsonFile<any[]>("products.json");
+export interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  keywords: string[];
+  features: string[];
 }
 
-export async function saveProducts(products: any[]) {
+export interface Industry {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  keywords: string[];
+}
+
+export interface KeywordsConfig {
+  primaryKeywords: string[];
+  secondaryKeywords: string[];
+  longTailKeywords: string[];
+}
+
+// CRUD Operations: Products
+export async function getProducts(): Promise<Product[]> {
+  return await readJsonFile<Product[]>("products.json");
+}
+
+export async function saveProducts(products: Product[]) {
   if (!(await isAuthenticated())) {
     throw new Error("Unauthorized access");
   }
@@ -92,11 +115,11 @@ export async function saveProducts(products: any[]) {
 }
 
 // CRUD Operations: Industries
-export async function getIndustries() {
-  return await readJsonFile<any[]>("industries.json");
+export async function getIndustries(): Promise<Industry[]> {
+  return await readJsonFile<Industry[]>("industries.json");
 }
 
-export async function saveIndustries(industries: any[]) {
+export async function saveIndustries(industries: Industry[]) {
   if (!(await isAuthenticated())) {
     throw new Error("Unauthorized access");
   }
@@ -110,7 +133,7 @@ export async function saveIndustries(industries: any[]) {
 }
 
 // CRUD Operations: Locations
-export async function getLocations() {
+export async function getLocations(): Promise<string[]> {
   return await readJsonFile<string[]>("locations.json");
 }
 
@@ -125,11 +148,11 @@ export async function saveLocations(locations: string[]) {
 }
 
 // CRUD Operations: Keywords
-export async function getKeywords() {
-  return await readJsonFile<any>("keywords.json");
+export async function getKeywords(): Promise<KeywordsConfig> {
+  return await readJsonFile<KeywordsConfig>("keywords.json");
 }
 
-export async function saveKeywords(keywords: any) {
+export async function saveKeywords(keywords: KeywordsConfig) {
   if (!(await isAuthenticated())) {
     throw new Error("Unauthorized access");
   }
@@ -137,3 +160,35 @@ export async function saveKeywords(keywords: any) {
   revalidatePath("/");
   return { success: true };
 }
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  date: string;
+  excerpt: string;
+  content: string;
+  coverImage?: string;
+  author: string;
+  category: string;
+  keywords?: string[];
+}
+
+// CRUD Operations: Blogs
+export async function getBlogs(): Promise<BlogPost[]> {
+  return await readJsonFile<BlogPost[]>("blogs.json");
+}
+
+export async function saveBlogs(blogs: BlogPost[]) {
+  if (!(await isAuthenticated())) {
+    throw new Error("Unauthorized access");
+  }
+  await writeJsonFile("blogs.json", blogs);
+  revalidatePath("/");
+  revalidatePath("/blog");
+  blogs.forEach((b) => {
+    revalidatePath(`/blog/${b.slug}`);
+  });
+  return { success: true };
+}
+

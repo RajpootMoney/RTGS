@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   isAuthenticated,
   login,
@@ -13,6 +13,8 @@ import {
   saveLocations,
   getKeywords,
   saveKeywords,
+  getBlogs,
+  saveBlogs,
 } from "./actions";
 
 interface Product {
@@ -38,6 +40,19 @@ interface KeywordsConfig {
   longTailKeywords: string[];
 }
 
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  date: string;
+  excerpt: string;
+  content: string;
+  coverImage?: string;
+  author: string;
+  category: string;
+  keywords?: string[];
+}
+
 export default function AdminPage() {
   // Auth state
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -47,7 +62,7 @@ export default function AdminPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Tab state
-  const [currentTab, setCurrentTab] = useState<"products" | "industries" | "locations" | "keywords">("products");
+  const [currentTab, setCurrentTab] = useState<"products" | "industries" | "locations" | "keywords" | "blogs">("products");
 
   // Data states
   const [products, setProducts] = useState<Product[]>([]);
@@ -58,6 +73,7 @@ export default function AdminPage() {
     secondaryKeywords: [],
     longTailKeywords: [],
   });
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
 
   // UI state
   const [isLoading, setIsLoading] = useState(false);
@@ -67,13 +83,148 @@ export default function AdminPage() {
   // Editing modals/forms state
   const [editingProduct, setEditingProduct] = useState<Partial<Product> | null>(null);
   const [editingIndustry, setEditingIndustry] = useState<Partial<Industry> | null>(null);
+  const [editingBlog, setEditingBlog] = useState<Partial<BlogPost> | null>(null);
   const [newLocation, setNewLocation] = useState("");
   
   // Custom tag/item inputs
   const [tempProductKeyword, setTempProductKeyword] = useState("");
   const [tempProductFeature, setTempProductFeature] = useState("");
   const [tempIndustryKeyword, setTempIndustryKeyword] = useState("");
+  const [tempBlogKeyword, setTempBlogKeyword] = useState("");
   const [tempKeywordInput, setTempKeywordInput] = useState({ primary: "", secondary: "", longTail: "" });
+  const [editorTab, setEditorTab] = useState<"visual" | "html">("visual");
+
+  const wysiwygRef = useRef<HTMLDivElement>(null);
+
+  const execFormatter = (command: string, value: string = "") => {
+    if (wysiwygRef.current) {
+      wysiwygRef.current.focus();
+    }
+    document.execCommand(command, false, value);
+    if (wysiwygRef.current) {
+      setEditingBlog((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          content: wysiwygRef.current!.innerHTML,
+        };
+      });
+    }
+  };
+
+  const insertLink = () => {
+    const url = window.prompt("Enter URL (e.g. https://google.com):");
+    if (url) {
+      execFormatter("createLink", url);
+    }
+  };
+
+  const [activeFormats, setActiveFormats] = useState({
+    h1: false,
+    h2: false,
+    h3: false,
+    p: false,
+    bold: false,
+    italic: false,
+    underline: false,
+    list: false,
+    blockquote: false,
+  });
+
+  const updateActiveFormats = () => {
+    if (!wysiwygRef.current) return;
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    
+    let node = sel.anchorNode;
+    let isInsideEditor = false;
+    let isH1 = false;
+    let isH2 = false;
+    let isH3 = false;
+    let isP = false;
+    let isList = false;
+    let isBlockquote = false;
+    
+    while (node) {
+      if (node === wysiwygRef.current) {
+        isInsideEditor = true;
+        break;
+      }
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const tagName = (node as Element).tagName.toUpperCase();
+        if (tagName === "H1") isH1 = true;
+        if (tagName === "H2") isH2 = true;
+        if (tagName === "H3") isH3 = true;
+        if (tagName === "P") isP = true;
+        if (tagName === "UL" || tagName === "OL" || tagName === "LI") isList = true;
+        if (tagName === "BLOCKQUOTE") isBlockquote = true;
+      }
+      node = node.parentNode;
+    }
+    
+    if (!isInsideEditor) return;
+
+    setActiveFormats({
+      h1: isH1,
+      h2: isH2,
+      h3: isH3,
+      p: isP || (!isH1 && !isH2 && !isH3 && !isList && !isBlockquote),
+      bold: document.queryCommandState("bold"),
+      italic: document.queryCommandState("italic"),
+      underline: document.queryCommandState("underline"),
+      list: isList || document.queryCommandState("insertUnorderedList"),
+      blockquote: isBlockquote,
+    });
+  };
+
+  const toggleBlock = (tag: string) => {
+    if (!wysiwygRef.current) return;
+    
+    // Check if the current format is already this tag
+    const isCurrentlyTag = activeFormats[tag.toLowerCase() as keyof typeof activeFormats];
+    
+    // If it's already this tag, toggle to "p" (normal text)
+    // Otherwise, set it to the requested tag
+    const targetTag = isCurrentlyTag ? "p" : tag;
+    
+    const commandValue = targetTag.toLowerCase();
+    
+    execFormatter("formatBlock", commandValue);
+    
+    // If formatting to a normal paragraph ("p"), also clear inline formatting (bold/italic/etc.) and hyperlinks
+    if (commandValue === "p") {
+      document.execCommand("removeFormat", false);
+      document.execCommand("unlink", false);
+    }
+    
+    updateActiveFormats();
+  };
+
+  const toggleList = () => {
+    execFormatter("insertUnorderedList");
+    updateActiveFormats();
+  };
+
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      updateActiveFormats();
+    };
+    document.addEventListener("selectionchange", handleSelectionChange);
+    return () => {
+      document.removeEventListener("selectionchange", handleSelectionChange);
+    };
+  }, [editingBlog?.id, editorTab]);
+
+  useEffect(() => {
+    if (currentTab === "blogs" && editingBlog && wysiwygRef.current) {
+      const targetContent = editingBlog.content || "";
+      if (wysiwygRef.current.innerHTML !== targetContent) {
+        wysiwygRef.current.innerHTML = targetContent;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingBlog?.id, currentTab, editorTab]);
+
 
   // Show Toast helper
   const showToast = (message: string, type: "success" | "error") => {
@@ -82,6 +233,35 @@ export default function AdminPage() {
       setToast(null);
     }, 4000);
   };
+
+  // Fetch all site configuration data
+  async function loadAllData() {
+    setIsLoading(true);
+    try {
+      const [p, ind, loc, keyw, blg] = await Promise.all([
+        getProducts(),
+        getIndustries(),
+        getLocations(),
+        getKeywords(),
+        getBlogs(),
+      ]);
+      setProducts(p || []);
+      setIndustries(ind || []);
+      setLocations(loc || []);
+      setKeywords(
+        keyw || {
+          primaryKeywords: [],
+          secondaryKeywords: [],
+          longTailKeywords: [],
+        }
+      );
+      setBlogs(blg || []);
+    } catch (error) {
+      showToast("Failed to load website content.", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   // Initial session check
   useEffect(() => {
@@ -99,34 +279,8 @@ export default function AdminPage() {
       }
     }
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Fetch all site configuration data
-  const loadAllData = async () => {
-    setIsLoading(true);
-    try {
-      const [p, ind, loc, keyw] = await Promise.all([
-        getProducts(),
-        getIndustries(),
-        getLocations(),
-        getKeywords(),
-      ]);
-      setProducts(p || []);
-      setIndustries(ind || []);
-      setLocations(loc || []);
-      setKeywords(
-        keyw || {
-          primaryKeywords: [],
-          secondaryKeywords: [],
-          longTailKeywords: [],
-        }
-      );
-    } catch (error) {
-      showToast("Failed to load website content.", "error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Handle Admin login
   const handleLogin = async (e: React.FormEvent) => {
@@ -415,6 +569,102 @@ export default function AdminPage() {
     }
   };
 
+  // --- CRUD HELPERS FOR BLOGS ---
+  const startEditBlog = (blog: BlogPost | null) => {
+    if (blog) {
+      setEditingBlog({ ...blog });
+    } else {
+      setEditingBlog({
+        id: "",
+        title: "",
+        slug: "",
+        date: new Date().toISOString().split("T")[0],
+        excerpt: "",
+        content: "",
+        coverImage: "",
+        author: "",
+        category: "",
+        keywords: [],
+      });
+    }
+    setTempBlogKeyword("");
+    setEditorTab("visual");
+  };
+
+  const saveBlogForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingBlog) return;
+
+    if (
+      !editingBlog.title ||
+      !editingBlog.slug ||
+      !editingBlog.date ||
+      !editingBlog.excerpt ||
+      !editingBlog.content ||
+      !editingBlog.author ||
+      !editingBlog.category
+    ) {
+      showToast("Please fill out all required fields.", "error");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      let updatedBlogs = [...blogs];
+      const isNew = !blogs.some((b) => b.id === editingBlog.id);
+
+      if (isNew) {
+        const newId = editingBlog.slug!;
+        const newBlog: BlogPost = {
+          id: newId,
+          title: editingBlog.title!,
+          slug: editingBlog.slug!,
+          date: editingBlog.date!,
+          excerpt: editingBlog.excerpt!,
+          content: editingBlog.content!,
+          coverImage: editingBlog.coverImage || "",
+          author: editingBlog.author!,
+          category: editingBlog.category!,
+          keywords: editingBlog.keywords || [],
+        };
+        updatedBlogs.push(newBlog);
+      } else {
+        updatedBlogs = updatedBlogs.map((b) =>
+          b.id === editingBlog.id ? (editingBlog as BlogPost) : b
+        );
+      }
+
+      const res = await saveBlogs(updatedBlogs);
+      if (res.success) {
+        setBlogs(updatedBlogs);
+        setEditingBlog(null);
+        showToast("Blog saved successfully!", "success");
+      }
+    } catch (err) {
+      showToast("Failed to save blog.", "error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const deleteBlog = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this blog?")) return;
+
+    setIsSaving(true);
+    try {
+      const updatedBlogs = blogs.filter((b) => b.id !== id);
+      const res = await saveBlogs(updatedBlogs);
+      if (res.success) {
+        setBlogs(updatedBlogs);
+        showToast("Blog deleted successfully.", "success");
+      }
+    } catch (err) {
+      showToast("Failed to delete blog.", "error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (isCheckingAuth) {
     return (
       <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center text-white">
@@ -545,13 +795,15 @@ export default function AdminPage() {
             { id: "industries", label: "Industries We Serve", icon: "🏭" },
             { id: "locations", label: "Locations", icon: "📍" },
             { id: "keywords", label: "SEO Keywords", icon: "🔍" },
+            { id: "blogs", label: "Blogs", icon: "✍️" },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => {
-                setCurrentTab(tab.id as any);
+                setCurrentTab(tab.id as "products" | "industries" | "locations" | "keywords" | "blogs");
                 setEditingProduct(null);
                 setEditingIndustry(null);
+                setEditingBlog(null);
               }}
               className={`flex items-center space-x-2 py-3 px-5 rounded-t-lg font-semibold border-b-2 text-sm md:text-base whitespace-nowrap transition duration-200 ${
                 currentTab === tab.id
@@ -1296,6 +1548,521 @@ export default function AdminPage() {
                   </div>
                 </div>
 
+              </div>
+            )}
+
+            {/* ================= BLOGS TAB ================= */}
+            {currentTab === "blogs" && (
+              <div>
+                {!editingBlog ? (
+                  <div>
+                    <div className="flex justify-between items-center mb-6">
+                      <div>
+                        <h2 className="text-xl font-bold text-white">Blog Management</h2>
+                        <p className="text-gray-400 text-sm">Write, format, update and delete blog articles.</p>
+                      </div>
+                      <button
+                        onClick={() => startEditBlog(null)}
+                        className="bg-accent text-white px-4 py-2 rounded-lg font-bold shadow-md hover:bg-accent/90 active:scale-[0.98] transition duration-200 flex items-center space-x-2 text-sm"
+                      >
+                        <span>+ Write Blog</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {blogs.map((blog) => (
+                        <div
+                          key={blog.id}
+                          className="glass-card-dark p-6 rounded-xl border border-white/5 flex flex-col h-full hover:border-white/10 transition duration-300"
+                        >
+                          <div className="flex justify-between items-start mb-3">
+                            <h3 className="text-lg font-bold text-white line-clamp-1">{blog.title}</h3>
+                            <span className="text-xs bg-white/10 text-gray-400 px-2 py-0.5 rounded font-mono">
+                              {blog.category}
+                            </span>
+                          </div>
+                          <p className="text-gray-400 text-sm line-clamp-3 mb-4 flex-grow">
+                            {blog.excerpt}
+                          </p>
+                          <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+                            <span>By {blog.author}</span>
+                            <span>{blog.date}</span>
+                          </div>
+
+                          <div className="flex space-x-2 pt-4 border-t border-white/5">
+                            <button
+                              onClick={() => startEditBlog(blog)}
+                              className="flex-1 bg-white/5 hover:bg-white/10 text-gray-200 py-2 rounded-lg text-sm font-semibold transition duration-200 border border-white/10"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => deleteBlog(blog.id)}
+                              disabled={isSaving}
+                              className="px-3 bg-red-950/20 hover:bg-red-950/40 text-red-400 hover:text-red-300 py-2 rounded-lg text-sm font-semibold transition duration-200 border border-red-900/30"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      {blogs.length === 0 && (
+                        <div className="col-span-full text-center py-12 text-gray-500">
+                          No blog posts found. Click &quot;+ Write Blog&quot; to create one.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  /* BLOG EDIT FORM */
+                  <div className="max-w-5xl mx-auto glass-card-dark p-6 md:p-8 rounded-xl border border-white/5">
+                    <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/5">
+                      <h2 className="text-xl font-bold text-white">
+                        {editingBlog.id ? `Edit Blog: ${editingBlog.title}` : "Write New Blog"}
+                      </h2>
+                      <button
+                        onClick={() => setEditingBlog(null)}
+                        className="text-gray-400 hover:text-white transition duration-200"
+                      >
+                        ✕ Cancel
+                      </button>
+                    </div>
+
+                    <form onSubmit={saveBlogForm} className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-300 mb-2">Blog Title *</label>
+                          <input
+                            type="text"
+                            value={editingBlog.title || ""}
+                            onChange={(e) => {
+                              const title = e.target.value;
+                              const slug = title
+                                .toLowerCase()
+                                .replace(/[^a-z0-9]+/g, "-")
+                                .replace(/(^-|-$)/g, "");
+                              setEditingBlog({
+                                ...editingBlog,
+                                title,
+                                slug: editingBlog.id ? editingBlog.slug : slug,
+                              });
+                            }}
+                            required
+                            placeholder="e.g. Benefits of PP Boxes"
+                            className="w-full bg-white/5 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-300 mb-2">URL Slug *</label>
+                          <input
+                            type="text"
+                            value={editingBlog.slug || ""}
+                            onChange={(e) =>
+                              setEditingBlog({
+                                ...editingBlog,
+                                slug: e.target.value
+                                  .toLowerCase()
+                                  .replace(/[^a-z0-9\-]+/g, ""),
+                              })
+                            }
+                            required
+                            placeholder="e.g. benefits-of-pp-boxes"
+                            className="w-full bg-white/5 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-300 mb-2">Author *</label>
+                          <input
+                            type="text"
+                            value={editingBlog.author || ""}
+                            onChange={(e) => setEditingBlog({ ...editingBlog, author: e.target.value })}
+                            required
+                            placeholder="e.g. John Doe"
+                            className="w-full bg-white/5 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-300 mb-2">Category *</label>
+                          <select
+                            value={editingBlog.category || ""}
+                            onChange={(e) => setEditingBlog({ ...editingBlog, category: e.target.value })}
+                            required
+                            className="w-full bg-white/5 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent font-sans text-gray-300"
+                          >
+                            <option value="" disabled className="bg-gray-900">Select Category</option>
+                            <option value="Packaging" className="bg-gray-900">Packaging</option>
+                            <option value="Logistics" className="bg-gray-900">Logistics</option>
+                            <option value="Sustainability" className="bg-gray-900">Sustainability</option>
+                            <option value="Electronics" className="bg-gray-900">Electronics</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-300 mb-2">Date *</label>
+                          <input
+                            type="date"
+                            value={editingBlog.date || ""}
+                            onChange={(e) => setEditingBlog({ ...editingBlog, date: e.target.value })}
+                            required
+                            className="w-full bg-white/5 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent font-sans text-gray-300"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-300 mb-2">Cover Image URL</label>
+                          <input
+                            type="text"
+                            value={editingBlog.coverImage || ""}
+                            onChange={(e) => setEditingBlog({ ...editingBlog, coverImage: e.target.value })}
+                            placeholder="e.g. /blog-guide-pp-boxes.webp"
+                            className="w-full bg-white/5 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-300 mb-2">Search Keywords (SEO)</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={tempBlogKeyword}
+                              onChange={(e) => setTempBlogKeyword(e.target.value)}
+                              placeholder="Press enter to add..."
+                              className="flex-grow bg-white/5 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:ring-1 focus:ring-accent"
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  if (!tempBlogKeyword.trim()) return;
+                                  const kws = editingBlog.keywords || [];
+                                  if (!kws.includes(tempBlogKeyword.trim())) {
+                                    setEditingBlog({
+                                      ...editingBlog,
+                                      keywords: [...kws, tempBlogKeyword.trim()],
+                                    });
+                                  }
+                                  setTempBlogKeyword("");
+                                }
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (!tempBlogKeyword.trim()) return;
+                                const kws = editingBlog.keywords || [];
+                                if (!kws.includes(tempBlogKeyword.trim())) {
+                                  setEditingBlog({
+                                    ...editingBlog,
+                                    keywords: [...kws, tempBlogKeyword.trim()],
+                                  });
+                                }
+                                setTempBlogKeyword("");
+                              }}
+                              className="bg-white/10 hover:bg-white/20 text-white px-4 rounded-lg font-bold border border-white/10 transition"
+                            >
+                              Add
+                            </button>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {editingBlog.keywords?.map((word) => (
+                              <span
+                                key={word}
+                                className="inline-flex items-center text-xs bg-secondary/35 border border-secondary/50 text-white px-2 py-0.5 rounded-full"
+                              >
+                                <span>{word}</span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setEditingBlog({
+                                      ...editingBlog,
+                                      keywords: (editingBlog.keywords || []).filter((w) => w !== word),
+                                    })
+                                  }
+                                  className="ml-1 text-accent hover:text-white"
+                                >
+                                  ✕
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-300 mb-2">Excerpt (Short Description) *</label>
+                        <textarea
+                          value={editingBlog.excerpt || ""}
+                          onChange={(e) => setEditingBlog({ ...editingBlog, excerpt: e.target.value })}
+                          required
+                          rows={2}
+                          placeholder="Provide a short, catchy summary of the article..."
+                          className="w-full bg-white/5 border border-white/10 rounded-lg py-2.5 px-4 text-white focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent"
+                        />
+                      </div>
+
+                      {/* Content WYSIWYG Editor with HTML source toggle */}
+                      <div>
+                        <div className="flex justify-between items-center mb-2">
+                          <label className="text-sm font-semibold text-gray-300">Blog Content (Rich Text Editor) *</label>
+                          <div className="flex bg-white/5 rounded-lg p-0.5 border border-white/10">
+                            <button
+                              type="button"
+                              onClick={() => setEditorTab("visual")}
+                              className={`px-3 py-1 text-xs font-semibold rounded-md transition duration-200 cursor-pointer ${
+                                editorTab === "visual"
+                                  ? "bg-accent text-white shadow-sm"
+                                  : "text-gray-400 hover:text-white"
+                              }`}
+                            >
+                              Visual Editor
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setEditorTab("html")}
+                              className={`px-3 py-1 text-xs font-semibold rounded-md transition duration-200 cursor-pointer ${
+                                editorTab === "html"
+                                  ? "bg-accent text-white shadow-sm"
+                                  : "text-gray-400 hover:text-white"
+                              }`}
+                            >
+                              HTML Source
+                            </button>
+                          </div>
+                        </div>
+
+                        {editorTab === "visual" ? (
+                          <div className="flex flex-col">
+                            {/* Formatting Toolbar */}
+                            <div className="flex flex-wrap gap-2 p-2 bg-white/5 border border-white/10 rounded-t-lg border-b-0 items-center">
+                              <span className="text-xs text-gray-400 font-semibold px-2">Size:</span>
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  toggleBlock("H1");
+                                }}
+                                className={`px-2 py-1 text-xs border rounded font-bold transition duration-200 cursor-pointer ${
+                                  activeFormats.h1
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Heading 1 (Large)"
+                              >
+                                H1
+                              </button>
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  toggleBlock("H2");
+                                }}
+                                className={`px-2 py-1 text-xs border rounded font-bold transition duration-200 cursor-pointer ${
+                                  activeFormats.h2
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Heading 2 (Medium)"
+                              >
+                                H2
+                              </button>
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  toggleBlock("H3");
+                                }}
+                                className={`px-2 py-1 text-xs border rounded font-bold transition duration-200 cursor-pointer ${
+                                  activeFormats.h3
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Heading 3 (Small)"
+                              >
+                                H3
+                              </button>
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  toggleBlock("P");
+                                }}
+                                className={`px-2 py-1 text-xs border rounded transition duration-200 cursor-pointer ${
+                                  activeFormats.p
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Normal Text"
+                              >
+                                Normal
+                              </button>
+                              
+                              <div className="h-4 w-px bg-white/10 mx-1"></div>
+                              
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  execFormatter("bold");
+                                  updateActiveFormats();
+                                }}
+                                className={`px-2.5 py-1 text-xs border rounded font-extrabold transition duration-200 cursor-pointer ${
+                                  activeFormats.bold
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Bold"
+                              >
+                                B
+                              </button>
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  execFormatter("italic");
+                                  updateActiveFormats();
+                                }}
+                                className={`px-2.5 py-1 text-xs border rounded italic transition duration-200 cursor-pointer ${
+                                  activeFormats.italic
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Italic"
+                              >
+                                I
+                              </button>
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  execFormatter("underline");
+                                  updateActiveFormats();
+                                }}
+                                className={`px-2.5 py-1 text-xs border rounded underline transition duration-200 cursor-pointer ${
+                                  activeFormats.underline
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Underline"
+                              >
+                                U
+                              </button>
+
+                              <div className="h-4 w-px bg-white/10 mx-1"></div>
+
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  toggleList();
+                                }}
+                                className={`px-2 py-1 text-xs border rounded transition duration-200 cursor-pointer ${
+                                  activeFormats.list
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Bullet List"
+                              >
+                                • List
+                              </button>
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  toggleBlock("blockquote");
+                                }}
+                                className={`px-2 py-1 text-xs border rounded transition duration-200 cursor-pointer italic ${
+                                  activeFormats.blockquote
+                                    ? "bg-accent text-white border-accent shadow-sm"
+                                    : "bg-white/5 hover:bg-white/10 border-white/10 text-gray-300"
+                                }`}
+                                title="Blockquote"
+                              >
+                                &ldquo; Quote
+                              </button>
+                              <button
+                                type="button"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  insertLink();
+                                }}
+                                className="px-2 py-1 text-xs bg-white/5 hover:bg-white/10 border border-white/10 rounded text-gray-300 transition duration-200 cursor-pointer"
+                                title="Insert Link"
+                              >
+                                🔗 Link
+                              </button>
+                            </div>
+
+                            {/* contentEditable WYSIWYG sheet container */}
+                            <div
+                              ref={wysiwygRef}
+                              contentEditable
+                              onInput={(e) => {
+                                const htmlContent = e.currentTarget.innerHTML;
+                                setEditingBlog((prev) => {
+                                  if (!prev) return prev;
+                                  return {
+                                    ...prev,
+                                    content: htmlContent,
+                                  };
+                                });
+                              }}
+                              className="w-full bg-white text-gray-800 rounded-b-lg py-4 px-6 min-h-[400px] max-h-[600px] overflow-y-auto outline-none border border-white/10 border-t-0 rounded-t-none text-left wysiwyg-editor prose prose-slate max-w-none"
+                              style={{ color: "#1f2937", backgroundColor: "#ffffff" }}
+                            />
+                            
+                            <p className="text-xs text-gray-500 mt-2">
+                              Visual Editor mode: Type directly above. Highlight text to apply formatting using the toolbar.
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col">
+                            <textarea
+                              value={editingBlog.content || ""}
+                              onChange={(e) =>
+                                setEditingBlog((prev) => {
+                                  if (!prev) return prev;
+                                  return {
+                                    ...prev,
+                                    content: e.target.value,
+                                  };
+                                })
+                              }
+                              required
+                              rows={15}
+                              placeholder="Raw HTML code will appear here..."
+                              className="w-full bg-white/5 border border-white/10 rounded-lg py-3 px-4 text-white font-mono focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent leading-relaxed text-sm"
+                            />
+                            <p className="text-xs text-gray-500 mt-2">
+                              HTML Source mode: Modify raw HTML markup tags directly.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex space-x-3 pt-6 border-t border-white/5">
+                        <button
+                          type="submit"
+                          disabled={isSaving}
+                          className="flex-grow bg-accent text-white py-3 rounded-lg font-bold shadow-lg hover:bg-accent/90 active:scale-[0.98] transition duration-200 flex items-center justify-center"
+                        >
+                          {isSaving ? "Saving changes..." : "Save Blog Post"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditingBlog(null)}
+                          className="px-6 bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 rounded-lg font-semibold transition"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                )}
               </div>
             )}
 
