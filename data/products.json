@@ -11,7 +11,13 @@
       "Returnable PP Boxes",
       "Heavy Duty PP Boxes"
     ],
-    "features": ["Water Resistant", "Heat Resistant", "Reusable", "Recyclable", "Durable"]
+    "features": [
+      "Water Resistant",
+      "Heat Resistant",
+      "Reusable",
+      "Recyclable",
+      "Durable"
+    ]
   },
   {
     "id": "pp-trays",
@@ -23,7 +29,12 @@
       "Industrial PP Trays",
       "Reusable Trays"
     ],
-    "features": ["Lightweight", "Customizable", "Stackable", "Non Breakable"]
+    "features": [
+      "Lightweight",
+      "Customizable",
+      "Stackable",
+      "Non Breakable"
+    ]
   },
   {
     "id": "esd-packaging",
@@ -36,7 +47,11 @@
       "Conductive Packaging",
       "ESD Safe Packaging"
     ],
-    "features": ["Anti-Static", "Conductive", "Safe for Electronics"]
+    "features": [
+      "Anti-Static",
+      "Conductive",
+      "Safe for Electronics"
+    ]
   },
   {
     "id": "foam-fitments",
@@ -48,7 +63,11 @@
       "EPE Fitments",
       "Protective Packaging"
     ],
-    "features": ["Protective Cushioning", "Impact Resistant", "Custom Fit"]
+    "features": [
+      "Protective Cushioning",
+      "Impact Resistant",
+      "Custom Fit"
+    ]
   },
   {
     "id": "pp-corrugated-sheets",
@@ -60,7 +79,11 @@
       "Polypropylene Sheets",
       "PP Flute Board"
     ],
-    "features": ["Water Repellent", "Long Life", "Recyclable"]
+    "features": [
+      "Water Repellent",
+      "Long Life",
+      "Recyclable"
+    ]
   },
   {
     "id": "custom-packaging",
@@ -72,6 +95,10 @@
       "Custom Packaging",
       "Returnable Packaging"
     ],
-    "features": ["100% Custom Manufacturing", "Returnable", "Sustainable"]
+    "features": [
+      "100% Custom Manufacturing",
+      "Returnable",
+      "Sustainable"
+    ]
   }
 ]

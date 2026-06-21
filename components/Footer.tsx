@@ -48,6 +48,7 @@ export default function Footer() {
             <li><Link href="/blog" className="hover:text-accent transition-fast">Blog</Link></li>
             <li><Link href="/contact" className="hover:text-accent transition-fast">Contact Us</Link></li>
             <li><Link href="/quote" className="hover:text-accent transition-fast">Get Quote</Link></li>
+            <li><Link href="/admin" className="hover:text-accent transition-fast">Admin Panel</Link></li>
           </ul>
         </div>
 
